@@ -1,0 +1,970 @@
+openapi: 3.0.0
+info:
+  title: Ethernet Product Qualification
+  description: The Product Qualification API provides a standardized mechanism for
+    placing a qualification request to check offer commercial eligibility with all
+    of the necessary parameters.
+  version: 1.0.0
+servers:
+- url: http://18.168.99.143/virts/swuser3/TestFirst1/1.0.0
+  description: SwaggerHub API Auto Mocking
+- url: https://enterprise-dev-dev.apigee.net/bt-wholesale/v1/product-qualification
+  description: Enterprise-test
+- url: https://api-sandbox.wholesale.bt.com/bt-wholesale/v1/product-qualification
+  description: Sandbox
+- url: https://api.wholesale.bt.com/bt-wholesale/v1/product-qualification
+  description: Production
+tags:
+- name: productQualification
+paths:
+  /{product-name}:
+    post:
+      tags:
+      - productQualification
+      summary: Product availability check
+      description: "<p>This API resource is used for checking the availability of\
+        \ a broadband and Ethernet services at a desired location. This API would\
+        \ support Directory Number, Network Address Key and Access Line ID as inputs\
+        \ for the request. </p>\n\n<details>\n<summary><b>Sandbox responses</b></summary>\n\
+        \n<p>The sandbox supports a number of success and failure scenarios. Use the\
+        \ parameters below in the sandbox API call to generate the corresponding responses.</p>\n\
+        <p>This API supports multiple resquest combinations. Success example responses\
+        \ are simulated based on the product characteristic name and value proivded\
+        \ in the request payload.</p>\n\n<details>\n<summary><b>Success scenarios</b></summary>\
+        \ \n\n| Parameters| Response details | Description |\n| ----------- | -------------------\
+        \ | ------------------ |      \n| When product characteristic is the AccessLineId\
+        \ and value pair below:</br></br>Related Entity:</br>&emsp;product:</br>&emsp;&emsp;characteristic:</br>&emsp;&emsp;&emsp;name:AccessLineId</br>&emsp;&emsp;&emsp;value:C000028783928|\
+        \ &emsp;201 | Provide this value in the request to get product qualification\
+        \ based on AccessLineId. |\n| When product characteristic is the directory\
+        \ number value pair below:</br></br>Related Entity:</br>&emsp;product:</br>&emsp;&emsp;characteristic:</br>&emsp;&emsp;&emsp;name:DirectoryNumber</br>&emsp;&emsp;&emsp;value:01473654321|\
+        \ &emsp;201 | Provide this value in the request to get product qualification\
+        \ based on DirectoryNumber |\n| When product characteristic is the directory\
+        \ number value pair below:</br></br>Related Entity:</br>&emsp;product:</br>&emsp;&emsp;place:</br>&emsp;&emsp;&emsp;name:DirectoryNumber</br>&emsp;&emsp;&emsp;value:01473654321|\
+        \ &emsp;201 | Provide this value in the request to get product qualification\
+        \ based on DirectoryNumber |\n| When product characteristic is the directory\
+        \ number value pair below:</br></br>Related Entity:</br>&emsp;product:</br>&emsp;&emsp;characteristic:</br>&emsp;&emsp;&emsp;name:DirectoryNumber</br>&emsp;&emsp;&emsp;value:01473654321|\
+        \ &emsp;201 | Provide this value in the request to get product qualification\
+        \ based on DirectoryNumber |\n\n</details>\n\n<details>\n<summary><b>Success\
+        \ scenarios</b></summary> \n\n| Parameters| Response details | Description\
+        \ |\n| ----------- | ------------------- | ------------------ |      \n| AccessLineId\
+        \ & C000028783928| 201 | Provide this value in the request to get product\
+        \ qualification based on AccessLineId. |\n| DirectoryNumber & 01473654321\
+        \ | 201 | Provide this value in the request to get product qualification based\
+        \ on DirectoryNumber |\n\n</details>\n\n<details>\n<summary><b>Error scenarios</b></summary>\
+        \    \n\n| APIGW-Tracking-Header | Sandbox response invoked | Description\
+        \ | \n| ----------- | ------------ | ------------ |\n| E02301 | 400, 23 |\
+        \ Bad Request. |    \n| E06001 | 404, 60 | Resource not found. |  \n| E00101\
+        \ | 500, 01 | Internal Error. |\n| E00501 | 503, 05 | The service is temporarily\
+        \ unavailable. |\n\n</details>\n</details>"
+      operationId: checkProductQualificationAndCreateQualificationId
+      parameters:
+      - name: APIGW-Tracking-Header
+        in: header
+        description: A unique reference used to track the transaction end to end.
+          The recommended format is UUID (a 36-character alphanumeric string "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX").
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 96bb97fa-b941-46bb-8c4e-86c616c28a13
+      - name: Authorization
+        in: header
+        description: This contains the access token obtained from a call to the OAuth
+          API. </br> The access token is prefixed with the word 'Bearer ' to form
+          the Authorization string.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: Bearer <token>
+      - name: Content-Type
+        in: header
+        description: It specifies the media type.</br>Possible value - application/json
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: application/json
+      - name: Accept
+        in: header
+        description: API will support JSON as default content-type
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: product-name
+        in: path
+        description: Name of the product. It could be the same as the name of the
+          product offering.</br>Below are the possible values</br>broadband-one</br>
+          ethernet
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: ethernet
+      requestBody:
+        description: </p>Valid combinations for Ethernet search:</br>Etherway:</br><ul><li>NAD</li><li>PostCode
+          + Northing+Easting</li></ul></br>Etherway Superfast GEA</br><ul><li>NAD</li><li>AccessLineID</li><li>DirectoryNumber</li></ul></p>
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/checkProductQualificationAndCreateQualificationIdRequest'
+            examples:
+              EthernetALIDRequest:
+                summary: Sample request for ethernet flow with AccessLineID
+                value:
+                  product:
+                    id: EtherwaySuperfastGEA
+                    characteristic:
+                    - name: AccessLineId
+                      value: C000028783928
+                  '@type': CompactQualification
+              EthernetDNRequest:
+                summary: Sample request for broadband flow Directory Number
+                value:
+                  product:
+                    id: EtherwaySuperfastGEA
+                    characteristic:
+                    - name: DirectoryNumber
+                      value: "01473654321"
+                  '@type': CompactQualification
+              EthernetNADRequest:
+                summary: Sample request for ethernet flow with NAD
+                value:
+                  product:
+                    id: Etherway
+                    place:
+                    - id: A12345678
+                      role: InstallationAddress
+                      '@referredType': OpenreachAddress
+                    characteristic:
+                    - name: bandwidth
+                      value: 1Gbit/s
+                    - name: intendedEtherflowBandwidth
+                      value: 0 - 300Mbit/s
+                  '@type': CompactQualification
+              EthernetPostcodeEastingAndNorthingRequest:
+                summary: Sample request for Broadband flow with postcode,easting and
+                  northing
+                value:
+                  product:
+                    id: Etherway
+                    place:
+                    - postcode: "31330"
+                      role: InstallationAddress
+                      '@referredType': OpenreachAddress
+                      geographicLocationRefOrValue:
+                        spatialRef: BNG
+                        geometry:
+                        - x: "105771.1"
+                          y: "205917.1"
+                    characteristic:
+                    - name: bandwidth
+                      value: 1G
+                    - name: intendedEtherflowBandwidth
+                      value: 0-300Mbit/s
+                  '@type': CompactQualification
+      responses:
+        "201":
+          description: Success Response <p> Note- The payload is a passthrough of
+            data from IIPMS.</p>
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/checkProductQualificationAndCreateQualificationIdResponse'
+              examples:
+                EthernetresponsetwithNAD:
+                  summary: Sample response for ethernet flow with NAD
+                  value:
+                    id: "1234"
+                    item:
+                    - id: 1234-1
+                      product:
+                        productSpecification:
+                          id: Etherway
+                          name: Etherway
+                          displayName: Etherway
+                        characteristic:
+                        - name: Bandwidth
+                          value: xxxxXYZ
+                        - name: ExchangeCode
+                          value: aaaa
+                        - name: RAG
+                          value: GREEN
+                        - name: CapacityAvailable
+                          value: xxxxXYZ
+                        place:
+                        - id: A12345678
+                          role: InstallationAddress
+                          '@referredType': OpenreachAddress
+                    - id: 1234-2
+                      product:
+                        productSpecification:
+                          id: Etherway
+                          name: Etherway
+                          displayName: Etherway
+                        characteristic:
+                        - name: Bandwidth
+                          value: xxxxXYZ
+                        - name: ExchangeCode
+                          value: bbbbb
+                        - name: RAG
+                          value: GREEN
+                        - name: CapacityAvailable
+                          value: xxxxXYZ
+                        place:
+                        - id: A12345678
+                          role: InstallationAddress
+                          '@referredType': OpenreachAddress
+                EthernetresponsewithALID:
+                  summary: Sample response for ethernet flow with ALID
+                  value:
+                    id: "1234"
+                    item:
+                    - id: 1234-1
+                      product:
+                        productSpecification:
+                          id: EtherwaySuperfastGEA
+                          name: EtherwaySuperfastGEA
+                          displayName: EtherwaySuperfastGEA
+                        characteristic:
+                        - name: AccessTechnology
+                          value: SOGEA
+                        - name: ExchangeCode
+                          value: xxxxXYZ
+                        - name: RAG
+                          value: RED
+                        - name: ReadyDate
+                          value: xxxxXYZ
+                        - name: AccessLineID
+                          value: C000028783928
+                        - name: EstimatedEthernetDownstreamDataBandwidth
+                          value: xxxxXYZ
+                        - name: EstimatedEthernetUpstreamDataBandwidth
+                          value: xxxxXYZ
+                        - name: MaximumDownstreamDataBandwidth
+                          value: xxxxXYZ
+                        - name: MaximumUpstreamDataBandwidth
+                          value: xxxxXYZ
+                    - id: 1234-2
+                      product:
+                        productSpecification:
+                          id: EtherwaySuperfastGEA
+                          name: EtherwaySuperfastGEA
+                          displayName: EtherwaySuperfastGEA
+                        characteristic:
+                        - name: AccessTechnology
+                          value: FTTC
+                        - name: ExchangeCode
+                          value: xxxxXYZ
+                        - name: RAG
+                          value: RED
+                        - name: ReadyDate
+                          value: xxxxXYZ
+                        - name: AccessLineID
+                          value: C000028783928
+                        - name: EstimatedEthernetDownstreamDataBandwidth
+                          value: xxxxXYZ
+                        - name: EstimatedEthernetUpstreamDataBandwidth
+                          value: xxxxXYZ
+                        - name: MaximumDownstreamDataBandwidth
+                          value: xxxxXYZ
+                        - name: MaximumUpstreamDataBandwidth
+                          value: xxxxXYZ
+                    '@type': BtQualification
+                EthernetresponsewithDN:
+                  summary: Sample response for broadband flow Directory Number
+                  value:
+                    id: "1234"
+                    item:
+                    - id: 1234-1
+                      product:
+                        productSpecification:
+                          id: EtherwaySuperfastGEA
+                          name: EtherwaySuperfastGEA
+                          displayName: EtherwaySuperfastGEA
+                        characteristic:
+                        - name: AccessTechnology
+                          value: SOGEA
+                        - name: ExchangeCode
+                          value: xxxxXYZ
+                        - name: RAG
+                          value: RED
+                        - name: ReadyDate
+                          value: xxxxXYZ
+                        - name: DirectoryNumber
+                          value: "01473654321"
+                        - name: EstimatedEthernetDownstreamDataBandwidth
+                          value: xxxxXYZ
+                        - name: EstimatedEthernetUpstreamDataBandwidth
+                          value: xxxxXYZ
+                        - name: MaximumDownstreamDataBandwidth
+                          value: xxxxXYZ
+                        - name: MaximumUpstreamDataBandwidth
+                          value: xxxxXYZ
+                    - id: 1234-2
+                      product:
+                        productSpecification:
+                          id: EtherwaySuperfastGEA
+                          name: EtherwaySuperfastGEA
+                          displayName: EtherwaySuperfastGEA
+                        characteristic:
+                        - name: AccessTechnology
+                          value: FTTC
+                        - name: ExchangeCode
+                          value: xxxxXYZ
+                        - name: RAG
+                          value: RED
+                        - name: ReadyDate
+                          value: xxxxXYZ
+                        - name: DirectoryNumber
+                          value: "01473654321"
+                        - name: EstimatedEthernetDownstreamDataBandwidth
+                          value: xxxxXYZ
+                        - name: EstimatedEthernetUpstreamDataBandwidth
+                          value: xxxxXYZ
+                        - name: MaximumDownstreamDataBandwidth
+                          value: xxxxXYZ
+                        - name: MaximumUpstreamDataBandwidth
+                          value: xxxxXYZ
+                    - id: 1234-3
+                      product:
+                        productSpecification:
+                          id: EtherwaySuperFastGEA
+                          name: EtherwaySuperFastGEA
+                          displayName: EtherwaySuperFastGEA
+                        characteristic:
+                        - name: AccessTechnology
+                          value: FTTP
+                        - name: ExchangeCode
+                          value: xxxxXYZ
+                        - name: RAG
+                          value: RED
+                        - name: ReadyDate
+                          value: xxxxXYZ
+                        - name: DirectoryNumber
+                          value: "01473654321"
+                        - name: EstimatedEthernetDownstreamDataBandwidth
+                          value: xxxxXYZ
+                        - name: EstimatedEthernetUpstreamDataBandwidth
+                          value: xxxxXYZ
+                        - name: MaximumDownstreamDataBandwidth
+                          value: xxxxXYZ
+                        - name: MaximumUpstreamDataBandwidth
+                          value: xxxxXYZ
+                        - name: ontList
+                          valueType: object
+                          value:
+                            ontData:
+                            - serialNumber: "11111111111"
+                              refNumber: ONT0000580553
+                              bbuStatus: Supplied
+                              l2sId: BAAFOD
+                              location:
+                                room: ""
+                                floor: ""
+                                position: ""
+                              ontType: port
+                              ontClassType: ont_port
+                              portAttributes:
+                              - name: portNumber
+                                vaue: "1"
+                              - name: portStatus
+                                vaue: Spare
+                              - name: portType
+                                vaue: Data
+                              - name: voiceWiringStatus
+                                vaue: Installed
+                            - serialNumber: "22222222222"
+                              refNumber: ONT0000580553
+                              l2sId: BAAFOD
+                              bbuStatus: Supplied
+                              location:
+                                room: ""
+                                floor: ""
+                                position: ""
+                              ontType: port
+                              ontClassType: ont_port
+                              portAttributes:
+                              - name: portNumber
+                                vaue: "2"
+                              - name: portStatus
+                                vaue: Working
+                              - name: portType
+                                vaue: Voice
+                              - name: voiceWiringStatus
+                                vaue: Not Installed
+                    '@type': BtQualification
+                EthernetresponsewithPostcodeEastingAndNorthing:
+                  summary: Sample response for Broadband flow with postcode,eastinga
+                    and northing
+                  value:
+                    id: "1234"
+                    item:
+                    - id: 1234-1
+                      product:
+                        productSpecification:
+                          id: Etherway
+                          name: Etherway
+                          displayName: Etherway
+                        characteristic:
+                        - name: Bandwidth
+                          value: xxxxXYZ
+                        - name: ExchangeCode
+                          value: aaaa
+                        - name: RAG
+                          value: GREEN
+                        - name: CapacityAvailable
+                          value: xxxxXYZ
+                        place:
+                        - postcode: "31330"
+                          role: InstallationAddress
+                          '@referredType': OpenreachAddress
+                          geographicLocationRefOrValue:
+                            spatialRef: BNG
+                            geometry:
+                            - x: "105771.1"
+                              y: "205917.1"
+                    - id: 1234-2
+                      product:
+                        productSpecification:
+                          id: Etherway
+                          name: Etherway
+                          displayName: Etherway
+                        characteristic:
+                        - name: Bandwidth
+                          value: xxxxXYZ
+                        - name: ExchangeCode
+                          value: bbbbb
+                        - name: RAG
+                          value: GREEN
+                        - name: CapacityAvailable
+                          value: xxxxXYZ
+                        place:
+                        - postcode: "31330"
+                          role: InstallationAddress
+                          '@referredType': OpenreachAddress
+                          geographicLocationRefOrValue:
+                            spatialRef: BNG
+                            geometry:
+                            - x: "105771.1"
+                              y: "205917.1"
+                EthernetresponsewithSuperfastGEANAD:
+                  summary: Sample Response for etherwaysuperfastGEA NAD request
+                  value:
+                    id: "1234"
+                    item:
+                    - id: 1234-1
+                      product:
+                        productSpecification:
+                          id: EtherwaySuperfastGEA
+                          name: EtherwaySuperfastGEA
+                          displayName: EtherwaySuperfastGEA
+                        characteristic:
+                        - name: AccessTechnology
+                          value: SOGEA
+                        - name: ExchangeCode
+                          value: xxxxXYZ
+                        - name: RAG
+                          value: RED
+                        - name: ReadyDate
+                          value: xxxxXYZ
+                        - name: EstimatedEthernetDownstreamDataBandwidth
+                          value: xxxxXYZ
+                        - name: EstimatedEthernetUpstreamDataBandwidth
+                          value: xxxxXYZ
+                        - name: MaximumDownstreamDataBandwidth
+                          value: xxxxXYZ
+                        - name: MaximumUpstreamDataBandwidth
+                          value: xxxxXYZ
+                        place:
+                        - id: A12345678
+                          role: InstallationAddress
+                          '@referredType': OpenreachAddress
+                    - id: 1234-2
+                      product:
+                        productSpecification:
+                          id: EtherwaySuperfastGEA
+                          name: EtherwaySuperfastGEA
+                          displayName: EtherwaySuperfastGEA
+                        characteristic:
+                        - name: accessTechnology
+                          value: FTTC
+                        - name: ExchangeCode
+                          value: xxxxXYZ
+                        - name: RAG
+                          value: GREEN
+                        - name: ReadyDate
+                          value: xxxxXYZ
+                        - name: EstimatedEthernetDownstreamDataBandwidth
+                          value: xxxxXYZ
+                        - name: EstimatedEthernetUpstreamDataBandwidth
+                          value: xxxxXYZ
+                        - name: MaximumDownstreamDataBandwidth
+                          value: xxxxXYZ
+                        - name: MaximumUpstreamDataBandwidth
+                          value: xxxxXYZ
+                        place:
+                        - id: A12345678
+                          role: InstallationAddress
+                          '@referredType': OpenreachAddress
+                    - id: 1234-3
+                      product:
+                        productSpecification:
+                          id: EtherwaySuperfastGEA
+                          name: EtherwaySuperfastGEA
+                          displayName: EtherwaySuperfastGEA
+                        characteristic:
+                        - name: accessTechnology
+                          value: FTTP
+                        - name: ExchangeCode
+                          value: xxxxXYZ
+                        - name: RAG
+                          value: AMBER
+                        - name: ReadyDate
+                          value: xxxxXYZ
+                        - name: EstimatedEthernetDownstreamDataBandwidth
+                          value: xxxxXYZ
+                        - name: EstimatedEthernetUpstreamDataBandwidth
+                          value: xxxxXYZ
+                        - name: MaximumDownstreamDataBandwidth
+                          value: xxxxXYZ
+                        - name: MaximumUpstreamDataBandwidth
+                          value: xxxxXYZ
+                        - name: ontList
+                          valueType: object
+                          value:
+                            ontData:
+                            - serialNumber: "11111111111"
+                              refNumber: ONT0000580553
+                              bbuStatus: Supplied
+                              l2sId: BAAFOD
+                              location:
+                                room: ""
+                                floor: ""
+                                position: ""
+                              ontType: port
+                              ontClassType: ont_port
+                              portAttributes:
+                              - name: portNumber
+                                vaue: "1"
+                              - name: portStatus
+                                vaue: Spare
+                              - name: portType
+                                vaue: Data
+                              - name: voiceWiringStatus
+                                vaue: Installed
+                            - serialNumber: "22222222222"
+                              refNumber: ONT0000580553
+                              l2sId: BAAFOD
+                              bbuStatus: Supplied
+                              location:
+                                room: ""
+                                floor: ""
+                                position: ""
+                              ontType: port
+                              ontClassType: ont_port
+                              portAttributes:
+                              - name: portNumber
+                                vaue: "2"
+                              - name: portStatus
+                                vaue: Working
+                              - name: portType
+                                vaue: Voice
+                              - name: voiceWiringStatus
+                                vaue: Not Installed
+                        place:
+                        - id: A12345678
+                          role: InstallationAddress
+                          '@referredType': OpenreachAddress
+        "400":
+          description: |-
+            Bad Request
+            | Code | Message | Description |
+            | ---- | ------- | ----------- |
+            | 21   |    Missing body  | This error is thrown when request payload is not passed. |
+            | 22   |    Invalid body  | This error is thrown when request payload is not in valid format. |
+            | 25 | Missing header: <header>| This error is thrown when any of the below mentioned mandatory headers are not passed in request header.<ul><li>APIGW-Tracking-Header</li><li>Content-Type</li><li>Content-Type</li></ul>|
+            | 26 | Invalid header value: <header>| This error is thrown when any of the below mentioned headers are not as per the agreed standards.<ul><li> Origin</li><li>APIGW-Tracking-Header</li></ul>|
+
+            Backend errors
+            | Code | Status | Reason |
+            | ---- | ------- | ----------- |
+            | 21   |    Missing body  | This error is thrown when request payload is not passed .</br>Note. error from downstream.|
+            | 22   |    Invalid body  | This error is thrown when request payload is not in valid format. |
+            | 23   |    Missing body field  | This error is thrown when mandatory body field is not passed. |
+            | 24   |    Invalid body field  | This error is thrown when body fields contain invalid values. |
+            | 25   |    Missing header  | This error is thrown when mandatory error is missed in the request. |
+            | 26   |    Invalid header value  | This error is thrown when passed header value is invalid. |
+            | 27   |    Bad request  | A general bad request error where we don't want to be any more specific. |
+            | 23 | Mandatory data Directory Number missing in request. Please retry request with mandatory data | Error throwm from backend|
+            | 24   | There is problem in processing request as Directory Number format is invalid. Directory Number must be equal to 7 numeric characters. Please retry request with valid DN | Error throwm from backend |
+            | 24   | There is problem in processing request as Directory Number format is invalid. Directory Number must be equal to 7 numeric characters. Please retry request with valid DN | Error throwm from backend|
+            | 23     | Mandatory data Address is missing in request. Please retry request with mandatory data | Error throwm from backend |
+            |24 | There is problem in processing request as PostCode format is invalid. PostCode must be equal to 7 numeric characters. Please retry request with valid PostCode | Error thrown from backend |
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorRepresentation'
+              examples:
+                APIGW Error Response:
+                  summary: APIGW Error Response
+                  value:
+                    code: "25"
+                    message: 'Missing header: APIGW-Tracking-Header'
+                Backend Error Response:
+                  summary: Backend Error Response
+                  value:
+                    code: "25"
+                    message: Missing header
+        "401":
+          description: |-
+            Unauthorized
+            | Code | Message | Description |
+            | ---- | ------- | ----------- |
+            | 40   |    Missing credentials  | This error is thrown when Authorization header is not passed. |
+            | 41  |    Invalid credentials  | This error is thrown when passed credentials is not in valid . |
+            | 42 | Expired credentials | This error is thrown when passed credential is out-of-date |
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorRepresentation'
+              example:
+                code: "40"
+                message: Missing credentials
+        "403":
+          description: |-
+            Forbidden
+            | Code | Message | Description |
+            | ---- | ------- | ----------- |
+            | 50   |    Access denied  | This error is thrown when an application that makes the request is not authorized to access this endpoint. |
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorRepresentation'
+              example:
+                code: "40"
+                message: Missing credentials
+        "404":
+          description: |-
+            Not Found
+            | Code | Message | Description |
+            | ---- | ------- | ----------- |
+            | 60   |  Resource not found| This error is thrown when the requested URI or the requested resource does not exist. |
+            | 60  |   For address entered there is no suitably enabled fibre serving exchange within range and therefore service cannot be provided to this address. Please contact your account manager/BT service team for assistance  | Error thrown from downstream |
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorRepresentation'
+              example:
+                code: "60"
+                message: Resource not found
+        "405":
+          description: |-
+            Method not allowed
+            | Code | Message | Description |
+            | ---- | ------- | ----------- |
+            | 61   |  Method not allowed | This error is thrown when the requested method is not supported by this resource. |
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorRepresentation'
+              example:
+                code: "61"
+                message: Method not allowed
+        "406":
+          description: |-
+            Not acceptable
+            | Code | Message | Description |
+            | ---- | ------- | ----------- |
+            | 62   |  Not acceptable | This error is thrown when the Accept  header does not match any available content-type. |
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorRepresentation'
+              example:
+                code: "62"
+                message: Not acceptable
+        "500":
+          description: |-
+            Internal Server Error
+            | Code | Message | Description |
+            | ---- | ------- | ----------- |
+            | 01   |  Internal Error | Error from downstream incase of below cases,</br><ul><li>Response type not supported</li><li>The request could not be understood, usually because the JSON or XML body contains an error</li><li>Any run-time error at API Layer</li></ul>. |
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorRepresentation'
+              example:
+                code: "01"
+                message: Internal Error
+        "429":
+          description: |-
+            Too Many Requests
+            | Code | Message | Description |
+            | ---- | ------- | ----------- |
+            | 53  |  Too Many Requests | This error is thrown when an application has made too many calls and has exceeded the rate limit for this service.</br>OR</br>When number of logins exceeded or exceeded API request limits in org from downstream. |
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorRepresentation'
+              example:
+                code: "53"
+                message: Too Many Requests
+        "415":
+          description: |-
+            Unsupported Media Type
+            | Code | Message | Description |
+            | ---- | ------- | ----------- |
+            | 68  |  Unsupported Media Type | This error is thrown when request payload is not in proper format. |
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorRepresentation'
+              example:
+                code: "68"
+                message: Unsupported Media Type
+        "503":
+          description: |-
+            Service Unavailable
+            | Code | Message | Description |
+            | ---- | ------- | ----------- |
+            | 05  |  The service is temporarily unavailable | When unable to connect target server in below cases-</br>Connect timeout</br>Bad Gateway</br>When server is not ready to handle the request |
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorRepresentation'
+              example:
+                code: "05"
+                message: The service is temporarily unavailable
+        "504":
+          description: |-
+            Gateway Timeout　
+            | Code | Message | Description |
+            | ---- | ------- | ----------- |
+            | 69 |  Gateway Timeout　 |  A timeout has occurred within APIGEE, whereby APIGEE did not receive a response from the backend service in time.</br>NOTE - Time set in APIGEE is 30000 milliseconds |
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorRepresentation'
+              example:
+                code: "69"
+                message: Gateway Timeout
+      security:
+      - OAuth2: []
+      x-codeSamples:
+      - lang: HTML
+        label: cURL
+        source: "curl -XGET\n-H \"APIGW-Tracking-Header: 96bb97fa-b941-46bb-8c4e-86c616c28a13\"\
+          \n-H \"Authorization: Bearer SZrYQsmi9tvGj1XwmKr5lXD4dpXY\" \nhttps://api-sandbox.wholesale.bt.com/bt-wholesale/v1/product-qualification/ethernet\n\
+          { \"product\" : { \"characteristic\" : [ { \"name\" : \"AccessLineId\",\
+          \ \"value\" : \"C000028783928\" } ] }, \"@type\" : \"CompactQualification\"\
+          \ } \n"
+components:
+  schemas:
+    checkProductQualificationAndCreateQualificationIdRequest:
+      type: object
+      properties:
+        product:
+          $ref: '#/components/schemas/checkProductQualificationAndCreateQualificationIdRequest_product'
+        '@type':
+          type: string
+          description: Indicates the type of the resource.</br>E.g. CompactQualification
+    checkProductQualificationAndCreateQualificationIdResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Qualification Id
+        item:
+          type: array
+          description: Array with list of products with their specifications and characteristics
+          items:
+            $ref: '#/components/schemas/checkProductQualificationAndCreateQualificationIdResponse_item'
+    ErrorRepresentation:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        code:
+          type: string
+          description: Represents the error code
+          example: "05"
+        message:
+          type: string
+          description: Represents the error message
+          example: The service is temporarily unavailable
+    checkProductQualificationAndCreateQualificationIdRequest_product_characteristic:
+      properties:
+        name:
+          type: string
+          description: Product characteristic name</br>E.g. DirectoryNumber, AccessLineId</br>Note-Mandatory
+            values when product.id is Etherway are below-</br>bandwidth</br>intendedEtherflowBandwidth
+        value:
+          type: string
+          description: Product characteristic value</br>E.g. 01473123456</br>E.g value
+            When either bandwith or intendedEtherflowBandwith is passed as value for
+            product.characteristic.name are 1Gbit/s and 0 - 300Mbit/s respectively
+    checkProductQualificationAndCreateQualificationIdRequest_product_geographicLocationRefOrValue_geometry:
+      properties:
+        x:
+          type: string
+          description: Represents the Easting value</br>Note:If id = 'Etherway' and
+            we are not having request based on NAD key then postCode+Northing+Easting
+            combination is mandatory.If neither of them are not present or expected
+            combination is not present then backend raise 400 error code
+        y:
+          type: string
+          description: Represents the Easting value</br>Note:If id = 'Etherway' and
+            we are not having request based on NAD key then postCode+Northing+Easting
+            combination is mandatory.If neither of them are not present or expected
+            combination is not present then backend raise 400 error code
+    checkProductQualificationAndCreateQualificationIdRequest_product_geographicLocationRefOrValue:
+      type: object
+      properties:
+        spatialRef:
+          type: string
+          description: This parameter specifies spatial ref value Eg- BNG
+        geometry:
+          type: array
+          description: It Includes both easting and northing values
+          items:
+            $ref: '#/components/schemas/checkProductQualificationAndCreateQualificationIdRequest_product_geographicLocationRefOrValue_geometry'
+      description: Note- If id = 'Etherway' and we are not having request based on
+        NAD key then postCode+Northing+Easting combination is mandatory.If neither
+        of them are not present or expected combination is not present then backend
+        raise 400 error code
+    checkProductQualificationAndCreateQualificationIdRequest_product_place:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the place.</br>E.g. A12345678
+        role:
+          type: string
+          description: A string.</br>E.g. InstallationAddress
+        postcode:
+          type: string
+          description: Represents the postcode.</br>Postcode search should be made
+            with combination of northing and easting</br>Note-If product.id = 'Etherway'
+            and we are not having request based on NAD key then postCode+Northing+Easting
+            combination is mandatory.If neither of them are not present or expected
+            combination is not present then backend will  raise 400 error code
+        geographicLocationRefOrValue:
+          $ref: '#/components/schemas/checkProductQualificationAndCreateQualificationIdRequest_product_geographicLocationRefOrValue'
+        '@referredType':
+          type: string
+          description: The actual type of the target instance when needed for disambiguation.</br>E.g.
+            OpenreachAddress
+    checkProductQualificationAndCreateQualificationIdRequest_product:
+      type: object
+      properties:
+        characteristic:
+          type: array
+          description: A list of product characteristics. Characteristics of the product
+            to instantiate or to modify.</br>NOTE- To see properties in product characteristics,
+            Please refer Product characteristics section below
+          items:
+            $ref: '#/components/schemas/checkProductQualificationAndCreateQualificationIdRequest_product_characteristic'
+        '@type':
+          type: string
+          description: Indicates the type of the resource.</br>E.g.CompactQualification
+        place:
+          type: array
+          description: A place defines a place described by reference or by value
+            linked to a specific entity.</br>NOTE- To see properties in product place
+            details, Please refer Product Place section below
+          items:
+            $ref: '#/components/schemas/checkProductQualificationAndCreateQualificationIdRequest_product_place'
+        id:
+          type: string
+          description: It represents the produc name. </br>Below are the possible
+            value-<ul><li>Etherway</li><li>EtherwaySuperfastGEA</li></ul>
+      description: A product (Product). Product reference. Configure the product characteristics
+        (only configurable characteristics and necessary only if a non-default value
+        is selected) and/or identify the product that needs to be modified/deleted.</br>NOTE-
+        To see properties in product array, Please refer Product section below
+    checkProductQualificationAndCreateQualificationIdResponse_product_productSpecification:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the product specification
+        name:
+          type: string
+          description: Name of the product specification
+        displayName:
+          type: string
+          description: Display name of the product specification
+      description: A Product Specification is a detailed description of a tangible
+        or intangible object made available externally in the form of a Product Offering
+        to customers or other parties playing a party role.
+    checkProductQualificationAndCreateQualificationIdResponse_product_characteristic:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Product characteristic name</br>Below are the possible values-</br>DirectoryNumber</br>BTWLowUploadSpeed</br>ProductMinimumGuaranteedSpeed</br>ProductLowDownloadSpeed</br>ProductHighUploadSpeed</br>BTWLowDownloadSpeed</br>ProductMaximumUploadSpeed</br>ProductMinimumUploadSpeed</br>BTWUpperDownstreamObservedSpeed</br>BTWUpperUpstreamObservedSpeed</br>ProductHighDownloadSpeed</br>BTWMinimumUploadSpeed</br>AccessLineID</br>ProductLowUploadSpeed</br>ProductMaximumDownloadSpeed</br>BTWMinimumGuaranteedSpeed</br>BTWHighUploadSpeed</br>BTWHighDownloadSpeed</br>ProductAdvertisedDownloadSpeed</br>Bandwidth</br>ExchangeCode</br>RAG</br>CapacityAvailable</br>AccessTechnology</br>ReadyDate</br>EstimatedEthernetUpstreamDataBandwidth</br>EstimatedEthernetDownstreamDataBandwidth</br>MaximumDownstreamDataBandwidth</br>MaximumUpstreamDataBandwidth
+    checkProductQualificationAndCreateQualificationIdResponse_product:
+      type: object
+      properties:
+        '@type':
+          type: string
+          description: Indicates the type of the resource.</br>E.g. CompactQualification
+            , BtQualification
+        productSpecification:
+          $ref: '#/components/schemas/checkProductQualificationAndCreateQualificationIdResponse_product_productSpecification'
+        characteristic:
+          type: array
+          description: A list of product characteristics. Characteristics of the product
+            to instantiate or to modify.
+          items:
+            $ref: '#/components/schemas/checkProductQualificationAndCreateQualificationIdResponse_product_characteristic'
+        value:
+          type: string
+          description: Characteristic values
+      description: A product (Product). Product reference. Configure the product characteristics
+        (only configurable characteristics and necessary only if a non-default value
+        is selected) and/or identify the product that needs to be modified/deleted.
+    checkProductQualificationAndCreateQualificationIdResponse_place:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the place.</br>E.g. A12345678
+        role:
+          type: string
+          description: A string.</br>E.g. InstallationAddress
+        '@referredType':
+          type: string
+          description: The actual type of the target instance when needed for disambiguation</br>E.g.
+            OpenreachAddress
+    checkProductQualificationAndCreateQualificationIdResponse_item:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Id of the product Qualification item</br>E.g. 1234-1
+        product:
+          $ref: '#/components/schemas/checkProductQualificationAndCreateQualificationIdResponse_product'
+        place:
+          type: array
+          description: A place defines a place described by reference or by value
+            linked to a specific entity.</br>NOTE- To see properties in product place
+            details, Please refer Product Place section below
+          items:
+            $ref: '#/components/schemas/checkProductQualificationAndCreateQualificationIdResponse_place'
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      description: This API requires [OAuth API](/node/360) validation.
+      flows:
+        clientCredentials:
+          tokenUrl: https://enterprise-dev-dev.apigee.net/oauth/accesstoken?grant_type=client_credentials
+          scopes: {}
